@@ -1,0 +1,18 @@
+spring:
+  application:
+    name: agentflow-sample
+
+server:
+  port: 8080
+
+agentflow:
+  tenant-header: X-Tenant-Id
+  default-tenant-id: acme
+  default-step-timeout: 30s
+  default-max-attempts: 3
+  snapshot-limit: 50
+
+logging:
+  level:
+    root: INFO
+    io.github.nephets.agentflow: INFO
