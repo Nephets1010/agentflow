@@ -81,3 +81,7 @@ agentflow:
 ## 架构约束
 
 `agentflow-core` 严禁依赖 `org.springframework.*`（CI 的 `architecture-boundaries` job 强制扫描）。
+
+## 设计决策
+
+1. **命令结果、演示叙述与运行日志共用 SLF4J 这一个出口，主源码不直接写 `System.out`。** 日志框架统一加级别、时间戳与线程名前缀，可按级别过滤、可被采集；而 `System.out` 的输出绕过这套配置，既关不掉也定位不到来源，混入日志流后还会打散多行输出的列对齐。这条由 `agentflow-starter` 的 `StdoutHygieneTest` 在构建期强制：它扫描五个模块的主源码，`System.out` / `System.err` / `System.console()` / `setOut` / `setErr` / `printStackTrace()` / `FileDescriptor.out|err` 命中即失败，并对扫描到的文件数设下限、防止路径改坏后「扫不到就算通过」。因此不要把示例的打印改回 `System.out`，异常也不要用 `printStackTrace()` 兜底——要么抛出，要么记日志。
